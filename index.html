@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Deutsch A1 → A2</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3b5bdb">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Deutsch">
 <style>
   :root{
     --bg:#f4f6fb; --card:#ffffff; --text:#1c2130; --muted:#6b7280;
@@ -1046,6 +1054,12 @@ function resetProgress(){
 }
 
 render();
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>
