@@ -91,13 +91,13 @@ export const POSSESSIVES = {
 // ---- PREPOSITIONS -----------------------------------------------
 // rule: short explanation of when to use it (shown in the Grammar reference)
 export const PREPOSITIONS = {
-  aus:  { en: "from / out of (origin, country or city)", rule: "Herkunft: Woher kommst du? — Ich komme aus + Land/Stadt (kein Artikel bei den meisten Ländern)." },
-  von:  { en: "from (a specific starting point)",         rule: "Ausgangspunkt: von + Dativ — Ich komme von der Arbeit / von zu Hause." },
-  nach: { en: "to (a city/country, no article)",           rule: "Richtung ohne Artikel: nach + Stadt/Land — Ich fahre nach Berlin / nach Deutschland." },
-  zu:   { en: "to (a place with an article, or a person)", rule: "Richtung zu einer Person oder einem Ort mit Artikel: zu + Dativ (zum = zu dem, zur = zu der) — Ich gehe zum Arzt / zur Schule / zu meiner Freundin." },
-  in:   { en: "in / into (enclosed place)",                rule: "Ort innerhalb eines Raumes: in + Dativ (wo?) / in + Akkusativ (wohin?) — im = in dem — Ich bin im Büro. / Ich gehe ins Büro." },
-  bei:  { en: "at (someone's place / a company)",          rule: "Bei einer Person oder Firma: bei + Dativ (beim = bei dem) — Ich bin bei meiner Oma. / Ich arbeite beim Supermarkt." },
-  auf:  { en: "on (a surface) / at (an event)",             rule: "Auf einer Fläche oder bei einer Veranstaltung: auf + Dativ/Akkusativ — Das Buch liegt auf dem Tisch. / Ich bin auf einer Party." },
+  aus:  { en: "from / out of (origin, country or city)", rule: "Origin: \"Woher kommst du?\" (Where are you from?) — Ich komme aus + country/city (no article for most countries)." },
+  von:  { en: "from (a specific starting point)",         rule: "Starting point: von + dative — Ich komme von der Arbeit (from work) / von zu Hause (from home)." },
+  nach: { en: "to (a city/country, no article)",           rule: "Direction with no article: nach + city/country — Ich fahre nach Berlin / nach Deutschland." },
+  zu:   { en: "to (a place with an article, or a person)", rule: "Direction toward a person or a place that takes an article: zu + dative (zum = zu dem, zur = zu der) — Ich gehe zum Arzt (to the doctor) / zur Schule (to school) / zu meiner Freundin (to my girlfriend)." },
+  in:   { en: "in / into (enclosed place)",                rule: "A place inside an enclosed space: in + dative (wo? = where) / in + accusative (wohin? = where to) — im = in dem — Ich bin im Büro (I'm in the office) / Ich gehe ins Büro (I'm going into the office)." },
+  bei:  { en: "at (someone's place / a company)",          rule: "At someone's place or a company: bei + dative (beim = bei dem) — Ich bin bei meiner Oma (at my grandma's) / Ich arbeite beim Supermarkt (I work at the supermarket)." },
+  auf:  { en: "on (a surface) / at (an event)",             rule: "On a surface or at an event: auf + dative/accusative — Das Buch liegt auf dem Tisch (The book is on the table) / Ich bin auf einer Party (I'm at a party)." },
 };
 
 // ---- NUMBERS (0-100, generated then hand-checked) ----------------
