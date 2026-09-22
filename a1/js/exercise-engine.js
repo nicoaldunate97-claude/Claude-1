@@ -176,7 +176,10 @@ export function genArticleExercises(skillId, nouns, opts = {}){
       });
     }
   });
-  return out;
+  // itemId stays tied to noun POSITION in the full pool (stable for SRS)
+  // regardless of how many of these actually get shown in one sitting —
+  // opts.count only caps and samples the OUTPUT, generated after the fact.
+  return opts.count ? sample(out, Math.min(opts.count, out.length)) : out;
 }
 
 // ============================================================

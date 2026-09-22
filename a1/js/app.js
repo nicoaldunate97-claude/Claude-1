@@ -400,7 +400,12 @@ function buildAdd(bi){
 function buildRemove(ai){
   if(SESSION.answered) return;
   const b = SESSION.buildState;
-  b.bank[b.answer[ai].i].used = false;
+  // b.answer[ai] IS the same object reference as its entry in b.bank (buildAdd
+  // pushes the object itself), so flip its flag directly — indexing back into
+  // b.bank by `.i` (the ORIGINAL pre-shuffle token position) was the bug: since
+  // b.bank is shuffled, that position holds an unrelated tile, so the tile you
+  // actually removed stayed marked "used" forever and could never be re-picked.
+  b.answer[ai].used = false;
   b.answer.splice(ai,1);
   render();
 }

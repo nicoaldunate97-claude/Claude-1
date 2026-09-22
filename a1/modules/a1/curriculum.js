@@ -70,15 +70,15 @@ export const VOCAB = {
 
   // ---- Day 4: sich vorstellen, aus, W-Fragen ----
   d4_name:       { de: "der Name",  gender:"der", en: "name",  pos: "noun" },
-  d4_land:       { de: "das Land",  gender:"das", en: "country", pos: "noun" },
   d4_chile:      { de: "Chile",         en: "Chile",       pos: "noun" },
   d4_deutschland:{ de: "Deutschland",   en: "Germany",     pos: "noun" },
-  d4_spanien:    { de: "Spanien",       en: "Spain",       pos: "noun" },
-  d4_argentinien:{ de: "Argentinien",   en: "Argentina",   pos: "noun" },
-  d4_mexiko:     { de: "Mexiko",        en: "Mexico",      pos: "noun" },
-  d4_oesterreich:{ de: "Österreich",    en: "Austria",     pos: "noun" },
-  d4_usa:        { de: "die USA",       en: "the USA",     pos: "noun" },
   d4_nett:       { de: "nett",  en: "nice / kind", pos: "adj", exampleDe: "Du bist sehr {{nett}}.", exampleEn: "You are very nice." },
+  d4_beruf:      { de: "der Beruf", gender:"der", en: "occupation / job", pos: "noun", exampleDe: "Was ist dein {{Beruf}}?", exampleEn: "What's your occupation?" },
+  d4_alter:      { de: "das Alter", gender:"das", en: "age", pos: "noun", exampleDe: "Das {{Alter}} spielt keine Rolle.", exampleEn: "Age doesn't matter." },
+  d4_verheiratet:{ de: "verheiratet", en: "married", pos: "adj", exampleDe: "Sie ist seit zwei Jahren {{verheiratet}}.", exampleEn: "She has been married for two years." },
+  d4_ledig:      { de: "ledig", en: "single (unmarried)", pos: "adj", exampleDe: "Ich bin noch {{ledig}}.", exampleEn: "I'm still single." },
+  d4_adresse:    { de: "die Adresse", gender:"die", en: "address", pos: "noun", exampleDe: "Kannst du mir deine {{Adresse}} geben?", exampleEn: "Can you give me your address?" },
+  d4_telefonnummer:{ de: "die Telefonnummer", gender:"die", en: "phone number", pos: "noun", exampleDe: "Ich habe meine {{Telefonnummer}} vergessen.", exampleEn: "I forgot my phone number." },
 
   // ---- Day 5: Beschreiben, Akkusativ ----
   d5_gross:      { de: "groß",    en: "big / tall", pos: "adj" },
@@ -163,7 +163,7 @@ export const SKILLS = {
     explanation: "The direct object takes the accusative case. Only \"der\" becomes \"den\" (and \"ein\" becomes \"einen\") — \"die\" and \"das\" don't change. Typical verbs: haben, brauchen, nehmen, kaufen.",
     examples: ["Ich habe einen Hund.", "Ich brauche die Tasche.", "Wir kaufen das Auto."],
     exerciseType: "article",
-    params: { nounsFn: () => [...vocabByDayPrefix("d2_"), ...vocabByDayPrefix("d5_")].filter(v=>v.gender), opts: { indefinite: true } },
+    params: { nounsFn: () => [...vocabByDayPrefix("d2_"), ...vocabByDayPrefix("d5_")].filter(v=>v.gender), opts: { indefinite: true, count: 6 } },
   },
   "uhrzeit-satzbau": {
     title: "Tagesablauf & Satzbau mit Zeitangaben",
