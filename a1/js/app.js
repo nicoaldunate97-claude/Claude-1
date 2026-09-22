@@ -549,23 +549,46 @@ function renderGrammarRef(){
 // ============================================================
 // MIS PALABRAS
 // ============================================================
+const POS_LABELS = { noun: "Nomen", verb: "Verb", adj: "Adjektiv", adv: "Adverb", phrase: "Phrase" };
+const GENDER_CLASS = { der: "gender-der", die: "gender-die", das: "gender-das" };
+let myWordsFilter = "all";
+
 function renderMyWords(){
   const ids = Object.keys(STATE.savedWords);
   const words = ids.map(id => ({ id, ...VOCAB[id], ...STATE.savedWords[id] })).filter(w => w.de);
+  const presentPos = [...new Set(words.map(w => w.pos).filter(Boolean))];
+  const filtered = myWordsFilter === "all" ? words : words.filter(w => w.pos === myWordsFilter);
+
   app.innerHTML = `
     ${header(true)}
     <main>
       <h2 class="page-title">💾 Meine Wörter</h2>
-      ${words.length === 0 ? `<div class="card"><p>Noch keine Wörter gespeichert. Tippe während einer Übung auf "Wort speichern".</p></div>` : ""}
-      ${words.map(w => `
+      ${words.length === 0 ? `<div class="card"><p>Noch keine Wörter gespeichert. Tippe während einer Übung auf "Wort speichern".</p></div>` : `
+        <div class="filter-row">
+          <span class="filter-chip ${myWordsFilter==='all'?'active':''}" onclick="App.setMyWordsFilter('all')">Alle (${words.length})</span>
+          ${presentPos.map(p => {
+            const count = words.filter(w=>w.pos===p).length;
+            return `<span class="filter-chip ${myWordsFilter===p?'active':''}" onclick="App.setMyWordsFilter('${p}')">${esc(POS_LABELS[p]||p)} (${count})</span>`;
+          }).join("")}
+        </div>
+      `}
+      ${filtered.map(w => `
         <div class="card word-card">
           <div>
-            <div class="word-de">${esc(w.de)}</div>
+            <div class="word-de">
+              ${w.gender ? `<span class="gender-badge ${GENDER_CLASS[w.gender]||''}">${esc(w.gender)}</span>` : ""}
+              ${esc(w.gender ? w.de.replace(/^(der|die|das)\s+/, "") : w.de)}
+            </div>
             <div class="word-en">${esc(w.en)}</div>
+            ${w.pos ? `<span class="badge word-pos-badge">${esc(POS_LABELS[w.pos]||w.pos)}</span>` : ""}
           </div>
           <button class="btn ghost small" onclick="App.toggleSaveWordAndRefresh('${w.id}')">🗑️</button>
         </div>`).join("")}
     </main>`;
+}
+function setMyWordsFilter(pos){
+  myWordsFilter = pos;
+  render();
 }
 function toggleSaveWordAndRefresh(vocabId){
   ST.unsaveWord(STATE, vocabId);
@@ -686,6 +709,7 @@ window.App = {
   answerMC, answerMCOrder, checkFill, buildAdd, buildRemove, buildClear, checkReorder,
   matchSelectLeft, matchSelectRight, toggleSaveWord, toggleSaveWordAndRefresh, nextExercise,
   createNewCode, useExistingCode, copySyncCode, exportData, importData, resetProgress,
+  setMyWordsFilter,
 };
 
 window.__DEBUG__ = () => SESSION; // read-only introspection hook, used by automated tests

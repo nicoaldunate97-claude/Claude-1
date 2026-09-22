@@ -43,6 +43,10 @@ export const VOCAB = {
   d1_ja:         { de: "ja",               en: "yes",                pos: "phrase" },
   d1_nein:       { de: "nein",             en: "no",                 pos: "phrase" },
   d1_muede:      { de: "müde",             en: "tired",              pos: "adj", exampleDe: "Ich bin {{müde}}.", exampleEn: "I am tired." },
+  d1_gut:        { de: "gut",              en: "good",               pos: "adj", exampleDe: "Das ist {{gut}}.", exampleEn: "That's good." },
+  d1_schlecht:   { de: "schlecht",         en: "bad",                pos: "adj", exampleDe: "Mir geht es {{schlecht}}.", exampleEn: "I'm not doing well." },
+  d1_vielleicht: { de: "vielleicht",       en: "maybe",              pos: "adv" },
+  d1_auch:       { de: "auch",             en: "also / too",         pos: "adv" },
 
   // ---- Day 2: haben, Zahlen, erste Nomen ----
   d2_tisch:      { de: "der Tisch",  gender:"der", en: "table",  pos: "noun" },
@@ -55,6 +59,10 @@ export const VOCAB = {
   d2_zeit:       { de: "die Zeit",   gender:"die", en: "time",   pos: "noun", exampleDe: "Ich habe keine {{Zeit}}.", exampleEn: "I don't have time." },
   d2_geld:       { de: "das Geld",   gender:"das", en: "money",  pos: "noun" },
   d2_frage:      { de: "die Frage",  gender:"die", en: "question", pos: "noun" },
+  d2_lampe:      { de: "die Lampe",  gender:"die", en: "lamp",   pos: "noun" },
+  d2_computer:   { de: "der Computer", gender:"der", en: "computer", pos: "noun" },
+  d2_bett:       { de: "das Bett",   gender:"das", en: "bed",    pos: "noun" },
+  d2_wand:       { de: "die Wand",   gender:"die", en: "wall",   pos: "noun" },
 
   // ---- Day 3: Verben im Präsens ----
   d3_lernen:     { de: "lernen",  en: "to learn",  pos: "verb" },
@@ -67,6 +75,10 @@ export const VOCAB = {
   d3_sehen:      { de: "sehen",   en: "to see",    pos: "verb" },
   d3_schlafen:   { de: "schlafen",en: "to sleep",  pos: "verb" },
   d3_helfen:     { de: "helfen",  en: "to help",   pos: "verb" },
+  d3_kaufen:     { de: "kaufen",  en: "to buy",    pos: "verb" },
+  d3_arbeiten:   { de: "arbeiten",en: "to work",   pos: "verb" },
+  d3_gehen:      { de: "gehen",   en: "to go (on foot)", pos: "verb" },
+  d3_fragen:     { de: "fragen",  en: "to ask",    pos: "verb" },
 
   // ---- Day 4: sich vorstellen, aus, W-Fragen ----
   d4_name:       { de: "der Name",  gender:"der", en: "name",  pos: "noun" },
@@ -79,6 +91,10 @@ export const VOCAB = {
   d4_ledig:      { de: "ledig", en: "single (unmarried)", pos: "adj", exampleDe: "Ich bin noch {{ledig}}.", exampleEn: "I'm still single." },
   d4_adresse:    { de: "die Adresse", gender:"die", en: "address", pos: "noun", exampleDe: "Kannst du mir deine {{Adresse}} geben?", exampleEn: "Can you give me your address?" },
   d4_telefonnummer:{ de: "die Telefonnummer", gender:"die", en: "phone number", pos: "noun", exampleDe: "Ich habe meine {{Telefonnummer}} vergessen.", exampleEn: "I forgot my phone number." },
+  d4_nationalitaet:{ de: "die Nationalität", gender:"die", en: "nationality", pos: "noun", exampleDe: "Meine {{Nationalität}} ist chilenisch.", exampleEn: "My nationality is Chilean." },
+  d4_muttersprache:{ de: "die Muttersprache", gender:"die", en: "native language", pos: "noun", exampleDe: "Meine {{Muttersprache}} ist Spanisch.", exampleEn: "My native language is Spanish." },
+  d4_nachbar:    { de: "der Nachbar", gender:"der", en: "neighbor", pos: "noun", exampleDe: "Mein {{Nachbar}} ist sehr freundlich.", exampleEn: "My neighbor is very friendly." },
+  d4_freuen:     { de: "sich freuen", en: "to be glad / happy", pos: "phrase", exampleDe: "Ich {{freue}} mich, dich kennenzulernen.", exampleEn: "I'm glad to meet you." },
 
   // ---- Day 5: Beschreiben, Akkusativ ----
   d5_gross:      { de: "groß",    en: "big / tall", pos: "adj" },
@@ -91,6 +107,14 @@ export const VOCAB = {
   d5_hund:       { de: "der Hund",  gender:"der", en: "dog",  pos: "noun" },
   d5_katze:      { de: "die Katze", gender:"die", en: "cat",  pos: "noun" },
   d5_auto:       { de: "das Auto",  gender:"das", en: "car",  pos: "noun" },
+  d5_schnell:    { de: "schnell",   en: "fast",        pos: "adj" },
+  d5_langsam:    { de: "langsam",   en: "slow",        pos: "adj" },
+  d5_interessant:{ de: "interessant", en: "interesting", pos: "adj" },
+  d5_wichtig:    { de: "wichtig",   en: "important",   pos: "adj" },
+  d5_haesslich:  { de: "hässlich",  en: "ugly",        pos: "adj" },
+  d5_einfach:    { de: "einfach",   en: "simple / easy", pos: "adj" },
+  d5_schwierig:  { de: "schwierig", en: "difficult",   pos: "adj" },
+  d5_praktisch:  { de: "praktisch", en: "practical",   pos: "adj" },
 
   // ---- Day 6: Tagesablauf, Uhrzeit ----
   d6_uhrzeit:    { de: "die Uhrzeit", gender:"die", en: "time (of day)", pos: "noun" },
@@ -103,6 +127,10 @@ export const VOCAB = {
   d6_aufstehen:  { de: "aufstehen", en: "to get up", pos: "verb" },
   d6_fruehstuecken:{ de: "frühstücken", en: "to have breakfast", pos: "verb" },
   d6_anfangen:   { de: "anfangen", en: "to start / begin", pos: "verb" },
+  d6_minute:     { de: "die Minute", gender:"die", en: "minute", pos: "noun" },
+  d6_nachts:     { de: "nachts",  en: "at night",    pos: "adv" },
+  d6_spaet:      { de: "spät",    en: "late",        pos: "adj" },
+  d6_frueh:      { de: "früh",    en: "early",       pos: "adj" },
 };
 
 // ---- helper: build a VOCAB subset by array of ids ---------------
@@ -123,7 +151,7 @@ export const SKILLS = {
     explanation: "\"sein\" is irregular and one of the most important verbs. You need it for names, origin, and characteristics: \"Ich bin müde\" (I am tired), \"Er ist nett\" (He is nice).",
     examples: ["Ich bin müde.", "Du bist nett.", "Er ist hier.", "Wir sind zu Hause."],
     exerciseType: "conjugation",
-    params: { verbIds: ["sein"], opts: { count: 8 } },
+    params: { verbIds: ["sein"], opts: { count: 14 } },
   },
   "haben": {
     title: "haben (to have) — Präsens",
@@ -131,7 +159,7 @@ export const SKILLS = {
     explanation: "\"haben\" is also irregular. Watch out with \"du\" and \"er/sie/es\": the -b- drops (du hast, er hat).",
     examples: ["Ich habe Zeit.", "Du hast ein Buch.", "Wir haben Geld."],
     exerciseType: "conjugation",
-    params: { verbIds: ["haben"], opts: { count: 8 } },
+    params: { verbIds: ["haben"], opts: { count: 14 } },
   },
   "verben-praesens": {
     title: "Regelmäßige & unregelmäßige Verben im Präsens",
@@ -139,7 +167,7 @@ export const SKILLS = {
     explanation: "Most verbs are regular: stem + e/st/t/en/t/en (ich lerne, du lernst...). Some change their vowel for \"du\" and \"er/sie/es\": e→i (sprechen→du sprichst), e→ie (sehen→du siehst), a→ä (schlafen→du schläfst).",
     examples: ["Ich lerne Deutsch.", "Du sprichst gut Deutsch.", "Er liest ein Buch.", "Sie schläft viel."],
     exerciseType: "conjugation",
-    params: { verbIds: ["lernen","wohnen","spielen","machen","sprechen","essen","lesen","sehen","schlafen","helfen"], opts: { count: 14 } },
+    params: { verbIds: ["lernen","wohnen","spielen","machen","sprechen","essen","lesen","sehen","schlafen","helfen","kaufen","arbeiten","gehen","fragen"], opts: { count: 26 } },
   },
   "w-fragen": {
     title: "W-Fragen",
@@ -182,10 +210,16 @@ function buildWFragenRecipes(){
     { frageDe:"Wo", frageEn:"where", subjectDe:"du", subjectEn:"you", person:"du", verbId:"wohnen", enOverride:"Where do you live?" },
     { frageDe:"Woher", frageEn:"where from", subjectDe:"du", subjectEn:"you", person:"du", verbId:"kommen", enOverride:"Where are you from?" },
     { frageDe:"Was", frageEn:"what", subjectDe:"du", subjectEn:"you", person:"du", verbId:"machen", enOverride:"What do you do?" },
+    { frageDe:"Wie alt", frageEn:"how old", subjectDe:"du", subjectEn:"you", person:"du", verbId:"sein", enOverride:"How old are you?" },
     { frageDe:"Wo", frageEn:"where", subjectDe:"Anna", subjectEn:"Anna", person:"er", verbId:"wohnen", enOverride:"Where does Anna live?" },
     { frageDe:"Woher", frageEn:"where from", subjectDe:"er", subjectEn:"he", person:"er", verbId:"kommen", enOverride:"Where does he come from?" },
     { frageDe:"Wie", frageEn:"what", subjectDe:"sie", subjectEn:"she", person:"er", verbId:"heissen", enOverride:"What is her name?" },
+    { frageDe:"Wie alt", frageEn:"how old", subjectDe:"er", subjectEn:"he", person:"er", verbId:"sein", enOverride:"How old is he?" },
+    { frageDe:"Was", frageEn:"what", subjectDe:"sie", subjectEn:"she", person:"er", verbId:"machen", enOverride:"What does she do?" },
     { frageDe:"Wo", frageEn:"where", subjectDe:"ihr", subjectEn:"you (pl.)", person:"ihr", verbId:"wohnen", enOverride:"Where do you (pl.) live?" },
+    { frageDe:"Woher", frageEn:"where from", subjectDe:"ihr", subjectEn:"you (pl.)", person:"ihr", verbId:"kommen", enOverride:"Where are you (pl.) from?" },
+    { frageDe:"Wo", frageEn:"where", subjectDe:"sie", subjectEn:"they", person:"sie_pl", verbId:"wohnen", enOverride:"Where do they live?" },
+    { frageDe:"Woher", frageEn:"where from", subjectDe:"sie", subjectEn:"they", person:"sie_pl", verbId:"kommen", enOverride:"Where are they from?" },
   ];
   return items.map(it => SB.buildWFrage(it));
 }
@@ -199,37 +233,45 @@ function buildAusItems(){
     { de:"Er", en:"He", person:"er" }, { de:"Wir", en:"We", person:"wir" },
   ];
   const out = [];
-  countries.forEach(c => {
-    const s = subjects[Math.floor(Math.random()*subjects.length)];
-    const verbForm = SB.conjugate("kommen", s.person);
-    out.push({
-      prepId: "aus",
-      sentence: `${s.de} ${verbForm} ___ ${c.de}.`,
-      en: `${s.en} come${s.person==="er"?"s":""} from ${c.en}.`,
+  // two passes over the country list (with a fresh random subject each time)
+  // for more repetitions without hand-typing more sentences.
+  for(let pass=0; pass<2; pass++){
+    countries.forEach(c => {
+      const s = subjects[Math.floor(Math.random()*subjects.length)];
+      const verbForm = SB.conjugate("kommen", s.person);
+      out.push({
+        prepId: "aus",
+        sentence: `${s.de} ${verbForm} ___ ${c.de}.`,
+        en: `${s.en} come${s.person==="er"?"s":""} from ${c.en}.`,
+      });
     });
-  });
+  }
   return out;
 }
 function buildUhrzeitRecipes(){
   const times = [
     { de: "sieben Uhr", en: "seven o'clock" }, { de: "acht Uhr", en: "eight o'clock" },
     { de: "neun Uhr", en: "nine o'clock" }, { de: "zehn Uhr", en: "ten o'clock" },
+    { de: "elf Uhr", en: "eleven o'clock" }, { de: "zwölf Uhr", en: "twelve o'clock" },
   ];
-  const verbs = ["aufstehen","fruehstuecken","anfangen"];
+  const verbLabel = { aufstehen: "get up", fruehstuecken: "have breakfast", anfangen: "start", aufhoeren: "finish" };
+  const verbs = ["aufstehen","fruehstuecken","anfangen","aufhoeren"];
   const out = [];
   verbs.forEach(verbId => {
+    for(let rep=0; rep<2; rep++){
     const t = times[Math.floor(Math.random()*times.length)];
     out.push(SB.buildStatement({
       subjectDe: "ich", subjectEn: "I", person: "ich", verbId,
       rest: [{ de: `um ${t.de}`, en: `at ${t.en}` }],
-      enOverride: `I ${verbId==="aufstehen"?"get up":verbId==="fruehstuecken"?"have breakfast":"start"} at ${t.en}.`,
+      enOverride: `I ${verbLabel[verbId]} at ${t.en}.`,
     }));
     out.push(SB.buildStatement({
       subjectDe: "ich", subjectEn: "I", person: "ich", verbId,
       rest: [],
       fronted: { de: `Um ${t.de}`, en: `At ${t.en}` },
-      enOverride: `At ${t.en} I ${verbId==="aufstehen"?"get up":verbId==="fruehstuecken"?"have breakfast":"start"}.`,
+      enOverride: `At ${t.en} I ${verbLabel[verbId]}.`,
     }));
+    }
   });
   return out;
 }

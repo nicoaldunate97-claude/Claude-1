@@ -10,15 +10,29 @@ import {
   genArticleExercises, genNegationExercises, genVocabExercises, genMatchExercise, sample,
 } from "./exercise-engine.js";
 
-const MATCH_GROUP_SIZE = 5;
+const MATCH_GROUP_SIZE = 6;
 const MATCH_MIN_GROUP = 4;
+const MATCH_MAX_ROUNDS = 3;
 import { dueItemIds } from "./state.js";
 
-const REVIEW_VOCAB_CAP = 12;
-const REVIEW_SKILLS_CAP = 4;
-const REVIEW_EXERCISES_PER_SKILL = 2;
-const TEST_EXERCISES_PER_SKILL = 3;
-const TEST_VOCAB_CAP = 15;
+const REVIEW_VOCAB_CAP = 18;
+const REVIEW_SKILLS_CAP = 6;
+const REVIEW_EXERCISES_PER_SKILL = 3;
+const TEST_EXERCISES_PER_SKILL = 4;
+const TEST_VOCAB_CAP = 20;
+
+// Splits vocabList into several non-overlapping match rounds (instead of
+// just one) once there's enough vocab to fill more than one round — more
+// reinforcement without repeating the same pairs in the same sitting.
+function addMatchRounds(exercises, vocabList){
+  if(vocabList.length < MATCH_MIN_GROUP) return;
+  const shuffled = sample(vocabList, vocabList.length); // shuffled copy, no repeats across rounds
+  const rounds = Math.min(MATCH_MAX_ROUNDS, Math.floor(shuffled.length / MATCH_MIN_GROUP));
+  for(let r = 0; r < rounds; r++){
+    const group = shuffled.slice(r * MATCH_GROUP_SIZE, r * MATCH_GROUP_SIZE + MATCH_GROUP_SIZE);
+    if(group.length >= MATCH_MIN_GROUP) exercises.push(genMatchExercise(group));
+  }
+}
 
 export function generateForSkill(SKILLS, skillId){
   const skill = SKILLS[skillId];
@@ -43,9 +57,7 @@ export function composeDaySession({ day, state, SKILLS, VOCAB, vocabByIds, vocab
     const weekVocab = (day.testVocabPrefixes || []).flatMap(p => vocabByDayPrefix(p));
     if(weekVocab.length){
       exercises.push(...genVocabExercises(sample(weekVocab, Math.min(TEST_VOCAB_CAP, weekVocab.length))));
-      if(weekVocab.length >= MATCH_MIN_GROUP){
-        exercises.push(genMatchExercise(sample(weekVocab, Math.min(MATCH_GROUP_SIZE, weekVocab.length))));
-      }
+      addMatchRounds(exercises, weekVocab);
     }
     return shuffleStable(exercises);
   }
@@ -56,9 +68,7 @@ export function composeDaySession({ day, state, SKILLS, VOCAB, vocabByIds, vocab
   // 2) new vocab introduced today
   const newVocab = vocabByIds(day.newVocabIds || []);
   if(newVocab.length) exercises.push(...genVocabExercises(newVocab));
-  if(newVocab.length >= MATCH_MIN_GROUP){
-    exercises.push(genMatchExercise(sample(newVocab, Math.min(MATCH_GROUP_SIZE, newVocab.length))));
-  }
+  addMatchRounds(exercises, newVocab);
 
   // 3) spaced-repetition review batch — vocab/skills from EARLIER days that are due
   const newVocabIdSet = new Set(day.newVocabIds || []);
