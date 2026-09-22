@@ -121,10 +121,20 @@ export function genSatzbauExercises(skillId, sentences, opts = {}){
 }
 // produces one plausible-but-wrong ordering (swap two middle tokens) for MC judgment items
 function scrambleClause(tokens, punctuation){
-  if(tokens.length < 3) return tokens.join(" ") + punctuation;
   const t = tokens.slice();
-  const i = 1, j = Math.min(2, t.length-1);
-  [t[i], t[j]] = [t[j], t[i]];
+  // Bug this fixes: for a 2-word sentence ("Wir fragen."), the old version
+  // returned early with the tokens UNCHANGED — the "wrong" option was
+  // identical to the correct one, every single time (verified: 5 of the
+  // day-3 Satzbau recipes are exactly 2 tokens, so this wasn't a rare
+  // edge case). A 2-word sentence only has one possible swap at all
+  // (subject <-> verb), so handle it explicitly instead of bailing out.
+  if(t.length < 2) return t.join(" ") + punctuation;
+  t[0] = t[0].charAt(0).toLowerCase() + t[0].slice(1);
+  if(t.length === 2){
+    [t[0], t[1]] = [t[1], t[0]];
+  } else {
+    [t[1], t[2]] = [t[2], t[1]];
+  }
   t[0] = t[0].charAt(0).toUpperCase() + t[0].slice(1);
   return t.join(" ") + punctuation;
 }
