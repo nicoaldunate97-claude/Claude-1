@@ -47,6 +47,24 @@ export function generateForSkill(SKILLS, skillId){
   }
 }
 
+// Regenerates ONE fresh exercise for a specific missed itemId, for the
+// end-of-session retry round — not the literal same question (that's
+// regenerated from the skill/word, so wording/distractors can differ),
+// but the same underlying word or grammar point. Returns null if the
+// item no longer resolves to anything (shouldn't normally happen).
+export function regenerateForItem({ itemId, SKILLS, VOCAB, vocabByIds }){
+  if(itemId.startsWith("vocab:")){
+    const vocabId = itemId.slice("vocab:".length);
+    if(!VOCAB[vocabId]) return null;
+    const exs = genVocabExercises(vocabByIds([vocabId]));
+    return exs[0] || null;
+  }
+  const skillId = itemId.split("|")[0];
+  if(!SKILLS[skillId]) return null;
+  const all = generateForSkill(SKILLS, skillId);
+  return all.find(e => e.itemId === itemId) || all[0] || null;
+}
+
 export function composeDaySession({ day, state, SKILLS, VOCAB, vocabByIds, vocabByDayPrefix }){
   let exercises = [];
 

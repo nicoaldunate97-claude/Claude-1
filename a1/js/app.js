@@ -251,9 +251,31 @@ function currentExercise(){
   if(SESSION.pos >= SESSION.exercises.length) return null;
   return SESSION.exercises[SESSION.pos];
 }
+// One extra pass at the end of the session covering everything missed,
+// instead of only resurfacing wrong answers days later via spaced review.
+// Only ever fires once per session (retryDone), so a wrong answer on the
+// retry itself doesn't loop forever — it just stays queued for the normal
+// spaced review like any other miss.
+function maybeAppendRetryRound(){
+  if(SESSION.retryDone) return false;
+  SESSION.retryDone = true;
+  const missed = SESSION.missedItemIds ? [...SESSION.missedItemIds] : [];
+  if(!missed.length) return false;
+  const retryExercises = missed
+    .map(itemId => DC.regenerateForItem({ itemId, SKILLS, VOCAB, vocabByIds }))
+    .filter(Boolean);
+  if(!retryExercises.length) return false;
+  SESSION.exercises = SESSION.exercises.concat(retryExercises);
+  SESSION.total = SESSION.exercises.length;
+  persist();
+  return true;
+}
 function renderSession(){
   const ex = currentExercise();
-  if(!ex) return finishSession();
+  if(!ex){
+    if(maybeAppendRetryRound()) return renderSession();
+    return finishSession();
+  }
   SESSION.answered = false;
   const day = DAYS.find(d => d.id === SESSION.dayId);
   const progress = `${SESSION.pos+1} / ${SESSION.total}`;
@@ -367,7 +389,15 @@ function gradeAndMaybeStats(ex, isCorrect){
   ST.gradeSrsItem(STATE, ex.itemId, isCorrect);
   ST.recordSkillAttempt(STATE, ex.skillId, isCorrect);
   if(isCorrect){ SESSION.score++; STATE.xp = (STATE.xp||0) + 5; }
+  else trackMissed(ex.itemId);
   persist();
+}
+// Missed items get one more shot at the end of the session (a fresh
+// exercise on the same word/skill, not the literal same question) instead
+// of only resurfacing days later via spaced review.
+function trackMissed(itemId){
+  if(!SESSION.missedItemIds) SESSION.missedItemIds = new Set();
+  SESSION.missedItemIds.add(itemId);
 }
 function showFeedback(correct, correctText){
   document.getElementById("fb").innerHTML =
@@ -473,6 +503,7 @@ function matchSelectRight(i){
     m.wrong = i;
     ST.gradeSrsItem(STATE, "vocab:"+ex.pairs[m.selectedLeft].vocabId, false);
     ST.recordSkillAttempt(STATE, "vokabular", false);
+    trackMissed("vocab:"+ex.pairs[m.selectedLeft].vocabId);
     persist();
     render();
     setTimeout(() => { m.wrong = null; render(); }, 600);

@@ -62,7 +62,7 @@ export function genConjugationExercises(skillId, verbIds, opts = {}){
     const v = VERBS[verbId];
     const correctForm = v.pres[personIdx];
     const infinitive = v.de || verbId;
-    const useType = pick(["mc","fill"]);
+    const useType = pick(["mc","fill","fill"]); // fill takes longer (actual typing/recall), weighted 2:1 over tapping an MC option
     if(useType === "mc"){
       const distractorPool = v.pres.filter((f,idx) => idx !== personIdx && f !== correctForm);
       const distractors = sample(distractorPool, Math.min(3, distractorPool.length));
@@ -141,7 +141,7 @@ export function genPrepositionExercises(skillId, items){
   const allPreps = Object.keys(PREPOSITIONS);
   const out = [];
   items.forEach((it) => {
-    const useType = pick(["mc","fill"]);
+    const useType = pick(["mc","fill","fill"]); // fill takes longer (actual typing/recall), weighted 2:1 over tapping an MC option
     if(useType === "mc"){
       const distractors = sample(allPreps.filter(p => p !== it.prepId), 3);
       out.push({
@@ -173,7 +173,7 @@ export function genArticleExercises(skillId, nouns, opts = {}){
   nouns.forEach((n, i) => {
     const a = ARTICLES[n.gender];
     const bare = n.de.replace(/^(der|die|das)\s+/, "");
-    const useType = pick(["mc","fill"]);
+    const useType = pick(["mc","fill","fill"]); // fill takes longer (actual typing/recall), weighted 2:1 over tapping an MC option
     const templates = opts.templates || [
       { de: (art) => `Ich brauche ${art} ${bare}.`, en: (art) => `I need ${art==='den'||art==='einen'?'the':'a'} ${n.en}.` },
     ];
@@ -225,7 +225,7 @@ export function genNegationExercises(skillId, items){
 export function genVocabExercises(vocabList, opts = {}){
   const out = [];
   vocabList.forEach((w) => {
-    const useType = opts.type || pick(["mc","mc","fill"]);
+    const useType = opts.type || pick(["mc","fill","fill"]); // fill (falls back to mc if no exampleDe) takes longer than tapping an option
     if(useType === "mc"){
       const pool = vocabList.filter(o => o.id !== w.id);
       const distractors = sample(pool, Math.min(3, pool.length)).map(o => o.en);
