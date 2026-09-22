@@ -12,8 +12,6 @@ function resolvePerson(personKey){
   if(idx == null) throw new Error("Unknown person: " + personKey);
   return idx;
 }
-function isThirdSingular(personKey){ return resolvePerson(personKey) === 2; }
-
 export function conjugate(verbId, personKey){
   const v = VERBS[verbId];
   if(!v) throw new Error("Unknown verb: " + verbId);
@@ -27,13 +25,17 @@ export function verbInfinitive(verbId){
 
 function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
 
-// Minimal English present-tense helper: base form for I/you/we/they-ish
-// subjects, +s for he/she/it. Good enough for hint translations (not graded).
-function conjugateEnglish(verbEn, person3rd){
+// Minimal English present-tense helper, keyed by the resolved person INDEX
+// (0-5) so it can get "be" (am/is/are) and "have" (has/have) fully right
+// across every person, not just 3rd singular — those two are common enough
+// in generated statements that getting only "is/has" right isn't good enough
+// (an earlier version returned "I be tired" for ich+sein). Everything else
+// still just gets the regular English -s for 3rd-person singular.
+function conjugateEnglish(verbEn, personIdx){
   const base = verbEn.replace(/^to /, "");
-  if(!person3rd) return base;
-  if(base === "be") return "is";
-  if(base === "have") return "has";
+  if(base === "be") return personIdx === 0 ? "am" : personIdx === 2 ? "is" : "are";
+  if(base === "have") return personIdx === 2 ? "has" : "have";
+  if(personIdx !== 2) return base;
   if(/[sxz]$|[cs]h$/.test(base)) return base + "es";
   if(/[^aeiou]y$/.test(base)) return base.slice(0,-1) + "ies";
   return base + "s";
@@ -68,7 +70,7 @@ export function buildStatement({ subjectDe, subjectEn, person, verbId, rest = []
     ? [fronted.de, verbForm, subjectDe, ...restDe]
     : [subjectDe, verbForm, ...restDe];
   if(v.sep) tokens.push(v.sep);
-  const verbEn = conjugateEnglish(v.en, isThirdSingular(person));
+  const verbEn = conjugateEnglish(v.en, resolvePerson(person));
   const enParts = fronted
     ? [fronted.en, subjectEn, verbEn, ...rest.map(r=>r.en)]
     : [subjectEn, verbEn, ...rest.map(r=>r.en)];
@@ -97,7 +99,7 @@ export function buildWFrage({ frageDe, frageEn, subjectDe, subjectEn, person, ve
   const verbForm = conjugate(verbId, person);
   const tokens = [frageDe, verbForm, subjectDe, ...rest.map(r=>r.de)];
   if(v.sep) tokens.push(v.sep);
-  const verbEn = conjugateEnglish(v.en, isThirdSingular(person));
+  const verbEn = conjugateEnglish(v.en, resolvePerson(person));
   const enParts = [frageEn, subjectEn, verbEn, ...rest.map(r=>r.en)];
   return { ...finalize(tokens, "?", enParts, enOverride), skillHint: "satzbau-w-frage" };
 }
@@ -109,7 +111,7 @@ export function buildJaNein({ subjectDe, subjectEn, person, verbId, rest = [], e
   const verbForm = conjugate(verbId, person);
   const tokens = [verbForm, subjectDe, ...rest.map(r=>r.de)];
   if(v.sep) tokens.push(v.sep);
-  const verbEn = conjugateEnglish(v.en, isThirdSingular(person));
+  const verbEn = conjugateEnglish(v.en, resolvePerson(person));
   const enParts = [verbEn, subjectEn, ...rest.map(r=>r.en)];
   return { ...finalize(tokens, "?", enParts, enOverride), skillHint: "satzbau-ja-nein" };
 }
@@ -117,7 +119,7 @@ export function buildJaNein({ subjectDe, subjectEn, person, verbId, rest = [], e
 // ---- weil-Satz: weil + Subjekt + Rest + Verb(final) --------------
 export function buildWeil({ subjectDe, subjectEn, person, verbId, rest = [], enOverride }){
   const verbForm = conjugate(verbId, person);
-  const verbEn = conjugateEnglish(VERBS[verbId].en, isThirdSingular(person));
+  const verbEn = conjugateEnglish(VERBS[verbId].en, resolvePerson(person));
   const tokens = ["weil", subjectDe, ...rest.map(r=>r.de), verbForm];
   const enParts = ["because", subjectEn, verbEn, ...rest.map(r=>r.en)];
   return { ...finalize(tokens, ".", enParts, enOverride), skillHint: "satzbau-weil" };

@@ -7,23 +7,7 @@
 // ============================================================
 import { VERBS, PREPOSITIONS, ARTICLES } from "../../js/grammar-data.js";
 import * as SB from "../../js/satzbau-engine.js";
-
-// ---- small reusable people pool for varied sentence subjects ----
-const PEOPLE = [
-  { de: "ich", en: "I", person: "ich" },
-  { de: "du", en: "you", person: "du" },
-  { de: "er", en: "he", person: "er" },
-  { de: "Anna", en: "Anna", person: "er" },
-  { de: "sie", en: "she", person: "er" },
-  { de: "wir", en: "we", person: "wir" },
-  { de: "ihr", en: "you (pl.)", person: "ihr" },
-];
-function people(n){ return EE_sample(PEOPLE, n); }
-function EE_sample(arr, n){
-  const a = arr.slice();
-  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
-  return a.slice(0, n);
-}
+import { sample } from "../../js/exercise-engine.js";
 
 // ============================================================
 // VOCAB — id: { de, en, pos, exampleDe?, exampleEn? }
@@ -151,7 +135,15 @@ export const SKILLS = {
     explanation: "\"sein\" is irregular and one of the most important verbs. You need it for names, origin, and characteristics: \"Ich bin müde\" (I am tired), \"Er ist nett\" (He is nice).",
     examples: ["Ich bin müde.", "Du bist nett.", "Er ist hier.", "Wir sind zu Hause."],
     exerciseType: "conjugation",
-    params: { verbIds: ["sein"], opts: { count: 14 } },
+    params: { verbIds: ["sein"], opts: { count: 10 } },
+  },
+  "sein-satzbau": {
+    title: "Sätze mit sein bilden",
+    category: "Satzbau", day: 1,
+    explanation: "Practice using \"sein\" in a full sentence, not just its isolated form: Subjekt + sein + Adjektiv/Ort.",
+    examples: ["Ich bin müde.", "Du bist hier.", "Wir sind zu Hause."],
+    exerciseType: "satzbau",
+    params: { recipesFn: buildSeinSatzbauRecipes },
   },
   "haben": {
     title: "haben (to have) — Präsens",
@@ -159,7 +151,15 @@ export const SKILLS = {
     explanation: "\"haben\" is also irregular. Watch out with \"du\" and \"er/sie/es\": the -b- drops (du hast, er hat).",
     examples: ["Ich habe Zeit.", "Du hast ein Buch.", "Wir haben Geld."],
     exerciseType: "conjugation",
-    params: { verbIds: ["haben"], opts: { count: 14 } },
+    params: { verbIds: ["haben"], opts: { count: 10 } },
+  },
+  "haben-satzbau": {
+    title: "Sätze mit haben bilden",
+    category: "Satzbau", day: 2,
+    explanation: "Practice using \"haben\" in a full sentence: Subjekt + haben + Objekt.",
+    examples: ["Ich habe Zeit.", "Du hast ein Buch.", "Er hat Geld."],
+    exerciseType: "satzbau",
+    params: { recipesFn: buildHabenSatzbauRecipes },
   },
   "verben-praesens": {
     title: "Regelmäßige & unregelmäßige Verben im Präsens",
@@ -168,6 +168,14 @@ export const SKILLS = {
     examples: ["Ich lerne Deutsch.", "Du sprichst gut Deutsch.", "Er liest ein Buch.", "Sie schläft viel."],
     exerciseType: "conjugation",
     params: { verbIds: ["lernen","wohnen","spielen","machen","sprechen","essen","lesen","sehen","schlafen","helfen","kaufen","arbeiten","gehen","fragen"], opts: { count: 26 } },
+  },
+  "verben-praesens-satzbau": {
+    title: "Sätze mit Präsensverben bilden",
+    category: "Satzbau", day: 3,
+    explanation: "Same rule as always: Subjekt + Verb(Position 2) + Rest. Now with a wider range of verbs.",
+    examples: ["Ich lerne Deutsch.", "Er liest ein Buch.", "Du arbeitest hier."],
+    exerciseType: "satzbau",
+    params: { recipesFn: buildVerbenPraesensSatzbauRecipes },
   },
   "w-fragen": {
     title: "W-Fragen",
@@ -204,6 +212,68 @@ export const SKILLS = {
 };
 
 // ---- recipe builders (use the Satzbau engine + small pools) ------
+
+// Every combo here is hand-checked to avoid needing Akkusativ endings
+// (no der-noun direct objects) — that rule isn't taught until day 5, so
+// these statements stick to predicate adjectives/adverbs, die/das objects
+// with ein/eine (identical in nominative and accusative, so nothing wrong
+// gets modeled), or plain intransitive use.
+function buildSeinSatzbauRecipes(){
+  const subjects = [
+    { de:"ich", en:"I", person:"ich" }, { de:"du", en:"you", person:"du" },
+    { de:"er", en:"he", person:"er" }, { de:"das", en:"that", person:"er" },
+    { de:"wir", en:"we", person:"wir" }, { de:"ihr", en:"you (pl.)", person:"ihr" },
+  ];
+  const predicates = [
+    { de:"müde", en:"tired" }, { de:"gut", en:"good" }, { de:"schlecht", en:"bad" },
+    { de:"hier", en:"here" }, { de:"zu Hause", en:"at home" },
+  ];
+  const out = [];
+  subjects.forEach(s => {
+    sample(predicates, 2).forEach(p => {
+      out.push(SB.buildStatement({ subjectDe:s.de, subjectEn:s.en, person:s.person, verbId:"sein", rest:[p] }));
+    });
+  });
+  return out;
+}
+function buildHabenSatzbauRecipes(){
+  const subjects = [
+    { de:"ich", en:"I", person:"ich" }, { de:"du", en:"you", person:"du" },
+    { de:"er", en:"he", person:"er" }, { de:"wir", en:"we", person:"wir" },
+    { de:"ihr", en:"you (pl.)", person:"ihr" }, { de:"sie", en:"they", person:"sie_pl" },
+  ];
+  const objects = [
+    { de:"Zeit", en:"time" }, { de:"Geld", en:"money" }, { de:"eine Frage", en:"a question" },
+    { de:"ein Buch", en:"a book" }, { de:"eine Tasche", en:"a bag" }, { de:"ein Handy", en:"a cell phone" },
+  ];
+  const out = [];
+  subjects.forEach(s => {
+    sample(objects, 2).forEach(o => {
+      out.push(SB.buildStatement({ subjectDe:s.de, subjectEn:s.en, person:s.person, verbId:"haben", rest:[o] }));
+    });
+  });
+  return out;
+}
+function buildVerbenPraesensSatzbauRecipes(){
+  const items = [
+    { verbId:"lernen", subjectDe:"ich", subjectEn:"I", person:"ich", rest:[{de:"Deutsch",en:"German"}] },
+    { verbId:"wohnen", subjectDe:"du", subjectEn:"you", person:"du", rest:[{de:"hier",en:"here"}], enOverride:"You live here." },
+    { verbId:"spielen", subjectDe:"wir", subjectEn:"we", person:"wir", rest:[] },
+    { verbId:"machen", subjectDe:"ihr", subjectEn:"you (pl.)", person:"ihr", rest:[{de:"das",en:"that"}], enOverride:"You (pl.) do that." },
+    { verbId:"sprechen", subjectDe:"sie", subjectEn:"they", person:"sie_pl", rest:[{de:"Deutsch",en:"German"}] },
+    { verbId:"essen", subjectDe:"du", subjectEn:"you", person:"du", rest:[] },
+    { verbId:"lesen", subjectDe:"er", subjectEn:"he", person:"er", rest:[{de:"ein Buch",en:"a book"}] },
+    { verbId:"sehen", subjectDe:"wir", subjectEn:"we", person:"wir", rest:[{de:"das",en:"that"}] },
+    { verbId:"schlafen", subjectDe:"ihr", subjectEn:"you (pl.)", person:"ihr", rest:[] },
+    { verbId:"helfen", subjectDe:"sie", subjectEn:"she", person:"er", rest:[] },
+    { verbId:"kaufen", subjectDe:"ich", subjectEn:"I", person:"ich", rest:[{de:"ein Handy",en:"a cell phone"}] },
+    { verbId:"arbeiten", subjectDe:"du", subjectEn:"you", person:"du", rest:[{de:"hier",en:"here"}] },
+    { verbId:"gehen", subjectDe:"er", subjectEn:"he", person:"er", rest:[{de:"nach Hause",en:"home"}], enOverride:"He goes home." },
+    { verbId:"fragen", subjectDe:"wir", subjectEn:"we", person:"wir", rest:[] },
+  ];
+  return items.map(it => SB.buildStatement(it));
+}
+
 function buildWFragenRecipes(){
   const items = [
     { frageDe:"Wie", frageEn:"what", subjectDe:"du", subjectEn:"you", person:"du", verbId:"heissen", enOverride:"What is your name?" },
@@ -284,21 +354,21 @@ export const DAYS = [
     id: 1, week: 1, isTest: false,
     title: "Begrüßung & sein",
     theme: "Basic greetings and the verb 'sein' (to be).",
-    newSkillIds: ["sein"],
+    newSkillIds: ["sein", "sein-satzbau"],
     newVocabIds: Object.keys(VOCAB).filter(k=>k.startsWith("d1_")),
   },
   {
     id: 2, week: 1, isTest: false,
     title: "haben & erste Nomen",
     theme: "The verb 'haben' (to have) and your first gendered nouns.",
-    newSkillIds: ["haben"],
+    newSkillIds: ["haben", "haben-satzbau"],
     newVocabIds: Object.keys(VOCAB).filter(k=>k.startsWith("d2_")),
   },
   {
     id: 3, week: 1, isTest: false,
     title: "Verben im Präsens",
     theme: "Regular and irregular present-tense conjugation.",
-    newSkillIds: ["verben-praesens"],
+    newSkillIds: ["verben-praesens", "verben-praesens-satzbau"],
     newVocabIds: Object.keys(VOCAB).filter(k=>k.startsWith("d3_")),
   },
   {
@@ -328,7 +398,7 @@ export const DAYS = [
     theme: "Combined review: sein, haben, present-tense verbs, W-Fragen, aus, Akkusativ, time.",
     newSkillIds: [],
     newVocabIds: [],
-    testSkillIds: ["sein","haben","verben-praesens","w-fragen","prep-aus","akkusativ","uhrzeit-satzbau"],
+    testSkillIds: ["sein","sein-satzbau","haben","haben-satzbau","verben-praesens","verben-praesens-satzbau","w-fragen","prep-aus","akkusativ","uhrzeit-satzbau"],
     testVocabPrefixes: ["d1_","d2_","d3_","d4_","d5_","d6_"],
   },
 ];

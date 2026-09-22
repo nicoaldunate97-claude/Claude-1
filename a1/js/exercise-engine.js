@@ -31,13 +31,35 @@ function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 // ============================================================
 const PERSON_LABEL = { 0:"ich", 1:"du", 2:"er/sie/es", 3:"wir", 4:"ihr", 5:"sie/Sie" };
 
+// Builds the full (verb x person) grid and walks shuffled laps of it, instead
+// of drawing independently at random each time. Independent random draws
+// from a small grid (e.g. one verb x 6 persons) WILL repeat heavily by the
+// pigeonhole principle, and can easily land the same item twice in a row -
+// exactly what happened with "sein" at count:14 over only 6 possible forms.
+// This guarantees every combination is used before any repeats, and a swap
+// at each lap boundary keeps the same item from landing back-to-back.
+function conjugationQueue(verbIds, count){
+  const grid = [];
+  verbIds.forEach(verbId => { for(let p=0; p<6; p++) grid.push({ verbId, personIdx: p }); });
+  const queue = [];
+  while(queue.length < count){
+    const lap = shuffle(grid);
+    const prev = queue[queue.length-1];
+    if(prev && lap[0].verbId === prev.verbId && lap[0].personIdx === prev.personIdx && lap.length > 1){
+      [lap[0], lap[1]] = [lap[1], lap[0]];
+    }
+    queue.push(...lap);
+  }
+  queue.length = count;
+  return queue;
+}
+
 export function genConjugationExercises(skillId, verbIds, opts = {}){
   const count = opts.count || verbIds.length * 2;
   const out = [];
-  for(let i=0; i<count; i++){
-    const verbId = pick(verbIds);
+  const queue = conjugationQueue(verbIds, count);
+  queue.forEach(({ verbId, personIdx }) => {
     const v = VERBS[verbId];
-    const personIdx = Math.floor(Math.random()*6);
     const correctForm = v.pres[personIdx];
     const infinitive = v.de || verbId;
     const useType = pick(["mc","fill"]);
@@ -66,7 +88,7 @@ export function genConjugationExercises(skillId, verbIds, opts = {}){
         hint: v.en,
       });
     }
-  }
+  });
   return out;
 }
 
