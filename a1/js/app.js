@@ -25,6 +25,12 @@ function saveLocalState(){
   try { localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(STATE)); } catch(e){}
 }
 function persist(){
+  // Snapshot the live exercise queue/position into STATE whenever we're
+  // mid-session, so leaving (back arrow, force-quit, phone call...) and
+  // coming back resumes at the same question instead of a fresh queue.
+  if(SESSION && SESSION.view === "session" && SESSION.exercises && SESSION.pos < SESSION.exercises.length){
+    STATE.inProgressSession = { dayId: SESSION.dayId, exercises: SESSION.exercises, pos: SESSION.pos, score: SESSION.score };
+  }
   saveLocalState();
   if(SYNC_CODE){
     syncStatus = "syncing"; renderSyncBadge();
@@ -144,12 +150,17 @@ function renderHome(){
   let dayCard;
   if(day){
     const isTest = day.isTest;
+    const resuming = STATE.inProgressSession && STATE.inProgressSession.dayId === day.id
+      && STATE.inProgressSession.pos < STATE.inProgressSession.exercises.length;
+    const label = resuming
+      ? `Weiter (Frage ${STATE.inProgressSession.pos+1} / ${STATE.inProgressSession.exercises.length})`
+      : (isTest ? "Test starten" : "Tag starten");
     dayCard = `
       <div class="card">
         <span class="badge">${isTest ? "WOCHENTEST" : "TAG " + day.id + " / " + totalDays}</span>
         <h2>${esc(day.title)}</h2>
         <p>${esc(day.theme)}</p>
-        <button class="btn" onclick="App.startDay(${day.id})">${isTest ? "Test starten" : "Tag starten"}</button>
+        <button class="btn" onclick="App.startDay(${day.id})">${label}</button>
       </div>`;
   } else {
     dayCard = `
@@ -183,6 +194,14 @@ function renderHome(){
 // DAY INTRO → GRAMMAR (if new skills) → SESSION
 // ============================================================
 function startDay(dayId){
+  const saved = STATE.inProgressSession;
+  if(saved && saved.dayId === dayId && saved.pos < saved.exercises.length){
+    nav("session", {
+      dayId, exercises: saved.exercises, pos: saved.pos, score: saved.score, total: saved.exercises.length,
+      answered: false, current: null,
+    });
+    return;
+  }
   const day = DAYS.find(d => d.id === dayId);
   const newSkills = (day.newSkillIds || []).filter(id => SKILLS[id]);
   if(newSkills.length){
@@ -222,6 +241,7 @@ function beginSession(dayId){
     dayId, exercises, pos: 0, score: 0, total: exercises.length,
     answered: false, current: null,
   });
+  persist(); // snapshot this freshly generated queue immediately, so leaving right away still resumes it (not a new one)
 }
 
 // ============================================================
@@ -466,6 +486,7 @@ function toggleSaveWord(vocabId){
 }
 function nextExercise(){
   SESSION.pos++; SESSION.buildState = null; SESSION.matchState = null;
+  persist();
   render();
 }
 
@@ -483,6 +504,7 @@ function finishSession(){
   }
   STATE.completedDays[day.id] = { completedAt: ST.todayStr(), score: SESSION.score, total: SESSION.total };
   if(wasNewDay) STATE.currentDay = day.id + 1;
+  STATE.inProgressSession = null;
   persist();
 
   const weakSkills = day.isTest ? weakestSkillsForDay(day) : [];

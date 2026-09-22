@@ -28,6 +28,7 @@ export function defaultState(){
     srs: {},                  // { [itemId]: { box, due, seen, correct } }  itemId = "vocab:x" or a skillId
     skillStats: {},           // { [skillId]: { correct, total } }  — cumulative, for the topic-accuracy dashboard
     savedWords: {},           // { [vocabId]: { addedAt, fromDay } }  — "Mis palabras"
+    inProgressSession: null,  // { dayId, exercises, pos, score } — lets leaving mid-day resume at the same question
   };
 }
 
