@@ -1,4 +1,4 @@
-const CACHE_NAME = "deutsch-a1-app-v1";
+const CACHE_NAME = "deutsch-a1-app-v2";
 const PRECACHE_URLS = [
   "./",
   "./index.html",

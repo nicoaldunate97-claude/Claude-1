@@ -740,6 +740,20 @@ render();
 
 if("serviceWorker" in navigator){
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js").catch(()=>{});
+    navigator.serviceWorker.register("service-worker.js").then((reg) => {
+      reg.update().catch(()=>{}); // check for a newer version right away, don't wait for the browser's own schedule
+    }).catch(()=>{});
+  });
+  // The service worker always skipWaiting()+clients.claim()s a new version
+  // as soon as it installs, so this fires whenever an update lands. Reload
+  // once so the page actually runs the new JS, instead of leaving stale
+  // code running until the user manually force-quits the app. Safe to do
+  // mid-session now: the exercise queue/position persists (see persist()),
+  // so a reload just resumes exactly where you were.
+  let reloadedForUpdate = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if(reloadedForUpdate) return;
+    reloadedForUpdate = true;
+    window.location.reload();
   });
 }
